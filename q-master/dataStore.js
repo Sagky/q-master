@@ -3,12 +3,7 @@ const queueState = {
   ticketCounter: 0,
   currentServing: null,
   waitingQueue: [],
-  history: [],
-  statistics: {
-    totalServed: 0,
-    totalSkipped: 0,
-    totalRemoved: 0
-  }
+  history: []
 };
 
 module.exports = queueState;

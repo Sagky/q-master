@@ -14,6 +14,28 @@ function showMessage(text, type = "info") {
   joinMessage.className = `message ${type}`;
 }
 
+function getCompletedTicketMessage(data) {
+  const historyEntry = data.history.find((entry) => entry.ticketNumber === customerTicketNumber);
+
+  if (!historyEntry) {
+    return "Your ticket is no longer waiting. Please contact a staff member for assistance.";
+  }
+
+  if (historyEntry.status === "Served") {
+    return "Your ticket has been served. Thank you for visiting!";
+  }
+
+  if (historyEntry.status === "Skipped") {
+    return "Your ticket was skipped because you were not present when called. Please contact a staff member if you still need assistance.";
+  }
+
+  if (historyEntry.status === "Removed") {
+    return "Your ticket has been removed from the queue.";
+  }
+
+  return "Your ticket is no longer waiting. Please contact a staff member for assistance.";
+}
+
 function updateCustomerView(data) {
   queueStatus.textContent = data.isPaused ? "Paused" : "Open";
   currentServing.textContent = data.currentServing || "None";
@@ -33,7 +55,7 @@ function updateCustomerView(data) {
   } else {
     queuePosition.textContent = "-";
     estimatedWait.textContent = "-";
-    showMessage("Your ticket is no longer waiting. Please listen for staff updates.", "success");
+    showMessage(getCompletedTicketMessage(data), "success");
   }
 }
 

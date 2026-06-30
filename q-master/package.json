@@ -1,0 +1,23 @@
+{
+  "name": "q-master",
+  "version": "1.0.0",
+  "description": "Q Master smart queue management prototype for Nhas City Chicken.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "queue",
+    "express",
+    "prototype",
+    "render"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

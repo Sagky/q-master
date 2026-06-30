@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Q Master</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand-mark small" href="/">
+      <span class="brand-icon">Q</span>
+      <span>Q Master</span>
+    </a>
+    <a class="text-link" href="/queue">Customer View</a>
+  </header>
+
+  <main class="page-shell admin-shell">
+    <section class="page-heading">
+      <p class="eyebrow">Q Master - Administrator Dashboard</p>
+      <h1>Nhas City Chicken</h1>
+      <p>Organization: Nhas City Chicken | Service Queue: Walk-In Customers</p>
+    </section>
+
+    <section class="notice">
+      Prototype Mode: The Administrator Dashboard is accessible for demonstration purposes only. In a production environment, it would be protected by authentication and role-based access control.
+    </section>
+
+    <section class="stats-row">
+      <div class="stat-card">
+        <span>Current Waiting</span>
+        <strong id="currentWaiting">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>Total Served</span>
+        <strong id="totalServed">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>Total Skipped</span>
+        <strong id="totalSkipped">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>Total Removed</span>
+        <strong id="totalRemoved">0</strong>
+      </div>
+    </section>
+
+    <section class="admin-actions panel">
+      <div>
+        <span class="muted-label">Current Serving Ticket</span>
+        <strong id="adminCurrentServing">None</strong>
+      </div>
+      <div class="button-group">
+        <button class="primary-button" id="callNextButton" type="button">Call Next</button>
+        <button class="secondary-button" id="pauseButton" type="button">Pause Queue</button>
+        <button class="secondary-button" id="resumeButton" type="button">Resume Queue</button>
+      </div>
+    </section>
+
+    <section class="grid-layout admin-grid">
+      <div class="panel">
+        <h2>Current Queue</h2>
+        <div id="queueList" class="list-area"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Queue History</h2>
+        <div id="historyList" class="list-area"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/admin.js"></script>
+</body>
+</html>

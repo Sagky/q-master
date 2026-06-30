@@ -6,7 +6,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public"), { index: false })); 
+app.use(express.static(path.join(__dirname, "public"), { index: false }));
+
+app.use("/api", (req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+});
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "landing.html"));
@@ -35,6 +40,35 @@ app.get("/api/queue", (req, res) => {
 
 app.post("/api/call-next", (req, res) => {
   res.json(queueService.callNext());
+});
+
+app.post("/api/skip/:ticket", (req, res) => {
+  try {
+    res.json(queueService.skipTicket(req.params.ticket));
+  } catch (error) {
+    res.status(error.statusCode || 500).json({ message: error.message });
+  }
+});
+
+app.post("/api/remove/:ticket", (req, res) => {
+  try {
+    res.json(queueService.removeTicket(req.params.ticket));
+  } catch (error) {
+    res.status(error.statusCode || 500).json({ message: error.message });
+  }
+});
+
+app.post("/api/pause", (req, res) => {
+  res.json(queueService.pauseQueue());
+});
+
+app.post("/api/resume", (req, res) => {
+  res.json(queueService.resumeQueue());
+});
+
+app.listen(PORT, () => {
+  console.log(`Q Master is running on port ${PORT}`);
+});  res.json(queueService.callNext());
 });
 
 app.post("/api/skip/:ticket", (req, res) => {

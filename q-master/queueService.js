@@ -7,6 +7,10 @@ function generateTicketNumber() {
   return `A${String(queueState.ticketCounter).padStart(3, "0")}`;
 }
 
+function countHistoryByStatus(status) {
+  return queueState.history.filter((entry) => entry.status === status).length;
+}
+
 function createQueueSnapshot(ticketNumber = null) {
   const position = ticketNumber
     ? queueState.waitingQueue.findIndex((item) => item.ticketNumber === ticketNumber) + 1
@@ -21,9 +25,9 @@ function createQueueSnapshot(ticketNumber = null) {
     history: queueState.history,
     statistics: {
       currentWaiting: queueState.waitingQueue.length,
-      totalServed: queueState.statistics.totalServed,
-      totalSkipped: queueState.statistics.totalSkipped,
-      totalRemoved: queueState.statistics.totalRemoved
+      totalServed: countHistoryByStatus("Served"),
+      totalSkipped: countHistoryByStatus("Skipped"),
+      totalRemoved: countHistoryByStatus("Removed")
     },
     customerTicket: ticketNumber
       ? {
@@ -35,6 +39,109 @@ function createQueueSnapshot(ticketNumber = null) {
       : null
   };
 }
+
+function joinQueue(customerName) {
+  if (queueState.isPaused) {
+    const error = new Error("Queue is currently paused. Please try again later.");
+    error.statusCode = 409;
+    throw error;
+  }
+
+  const cleanName = customerName.trim();
+
+  if (!cleanName) {
+    const error = new Error("Customer name is required.");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const ticketNumber = generateTicketNumber();
+  const newTicket = {
+    ticketNumber,
+    customerName: cleanName,
+    joinedAt: new Date().toISOString()
+  };
+
+  queueState.waitingQueue.push(newTicket);
+
+  return createQueueSnapshot(ticketNumber);
+}
+
+function addHistoryEntry(ticket, status) {
+  queueState.history.unshift({
+    ticketNumber: ticket.ticketNumber,
+    customerName: ticket.customerName,
+    status,
+    actionTime: new Date().toISOString()
+  });
+}
+
+function callNext() {
+  const nextTicket = queueState.waitingQueue.shift();
+
+  if (!nextTicket) {
+    return createQueueSnapshot();
+  }
+
+  queueState.currentServing = nextTicket.ticketNumber;
+  addHistoryEntry(nextTicket, "Served");
+
+  return createQueueSnapshot();
+}
+
+function skipTicket(ticketNumber) {
+  const ticketIndex = queueState.waitingQueue.findIndex(
+    (ticket) => ticket.ticketNumber === ticketNumber
+  );
+
+  if (ticketIndex === -1) {
+    const error = new Error("Ticket was not found in the waiting queue.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const [ticket] = queueState.waitingQueue.splice(ticketIndex, 1);
+  addHistoryEntry(ticket, "Skipped");
+
+  return createQueueSnapshot();
+}
+
+function removeTicket(ticketNumber) {
+  const ticketIndex = queueState.waitingQueue.findIndex(
+    (ticket) => ticket.ticketNumber === ticketNumber
+  );
+
+  if (ticketIndex === -1) {
+    const error = new Error("Ticket was not found in the waiting queue.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const [ticket] = queueState.waitingQueue.splice(ticketIndex, 1);
+  addHistoryEntry(ticket, "Removed");
+
+  return createQueueSnapshot();
+}
+
+function pauseQueue() {
+  queueState.isPaused = true;
+  return createQueueSnapshot();
+}
+
+function resumeQueue() {
+  queueState.isPaused = false;
+  return createQueueSnapshot();
+}
+
+module.exports = {
+  joinQueue,
+  createQueueSnapshot,
+  callNext,
+  skipTicket,
+  removeTicket,
+  pauseQueue,
+  resumeQueue
+};}
 
 function joinQueue(customerName) {
   if (queueState.isPaused) {

@@ -26,22 +26,27 @@
       Prototype Mode: The Administrator Dashboard is accessible for demonstration purposes only. In a production environment, it would be protected by authentication and role-based access control.
     </section>
 
-    <section class="stats-row">
-      <div class="stat-card">
-        <span>Current Waiting</span>
-        <strong id="currentWaiting">0</strong>
+    <section class="panel statistics-panel" aria-labelledby="statisticsTitle">
+      <div class="section-title">
+        <h2 id="statisticsTitle">Queue Statistics</h2>
       </div>
-      <div class="stat-card">
-        <span>Total Served</span>
-        <strong id="totalServed">0</strong>
-      </div>
-      <div class="stat-card">
-        <span>Total Skipped</span>
-        <strong id="totalSkipped">0</strong>
-      </div>
-      <div class="stat-card">
-        <span>Total Removed</span>
-        <strong id="totalRemoved">0</strong>
+      <div class="stats-row">
+        <div class="stat-card">
+          <span>Total Served</span>
+          <strong id="totalServed">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>Total Skipped</span>
+          <strong id="totalSkipped">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>Total Removed</span>
+          <strong id="totalRemoved">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>Current Waiting Count</span>
+          <strong id="currentWaiting">0</strong>
+        </div>
       </div>
     </section>
 
@@ -62,6 +67,23 @@
         <h2>Current Queue</h2>
         <div id="queueList" class="list-area"></div>
       </div>
+
+      <div class="panel">
+        <h2>Queue History</h2>
+        <div class="history-header" aria-hidden="true">
+          <span>Ticket ID</span>
+          <span>Customer Name</span>
+          <span>Status</span>
+          <span>Timestamp</span>
+        </div>
+        <div id="historyList" class="list-area"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/admin.js"></script>
+</body>
+</html>      </div>
 
       <div class="panel">
         <h2>Queue History</h2>

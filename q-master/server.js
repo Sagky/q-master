@@ -68,33 +68,4 @@ app.post("/api/resume", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Q Master is running on port ${PORT}`);
-});  res.json(queueService.callNext());
-});
-
-app.post("/api/skip/:ticket", (req, res) => {
-  try {
-    res.json(queueService.skipTicket(req.params.ticket));
-  } catch (error) {
-    res.status(error.statusCode || 500).json({ message: error.message });
-  }
-});
-
-app.post("/api/remove/:ticket", (req, res) => {
-  try {
-    res.json(queueService.removeTicket(req.params.ticket));
-  } catch (error) {
-    res.status(error.statusCode || 500).json({ message: error.message });
-  }
-});
-
-app.post("/api/pause", (req, res) => {
-  res.json(queueService.pauseQueue());
-});
-
-app.post("/api/resume", (req, res) => {
-  res.json(queueService.resumeQueue());
-});
-
-app.listen(PORT, () => {
-  console.log(`Q Master is running on port ${PORT}`);
-});
+});  
